@@ -1,0 +1,11 @@
+drop table classinfo;
+create table classinfo(
+id varchar2(6) primary key,
+name varchar2(20) not null,
+kor number(3) not null,
+eng number(3) not null,
+math number(3) not null
+);
+);
+
+select * from classinfo;

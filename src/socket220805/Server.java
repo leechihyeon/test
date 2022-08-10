@@ -1,0 +1,62 @@
+package socket220805;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+//서버, 클라이언트, 클라이언트가 서버에 접속, 
+//서버는 소켓을 생성하고 내보내는 스트림(outputstream)으로 클라이언트에게 데이터 바로 전송
+
+public class Server {
+
+	public static void main(String[] args) throws ClassNotFoundException {
+		try {
+			ServerSocket server=new ServerSocket(1111);
+			System.out.println("서버 접속대기중...... ");
+			Socket client=server.accept();
+			System.out.println("클라이언트 접속 ");
+
+			InputStream is = client.getInputStream();
+			ObjectInputStream ois = new ObjectInputStream(is);
+			
+			DataInputStream in=new DataInputStream(is);
+			String recvTime=in.readUTF();
+			long beforeTime=Long.valueOf(recvTime);
+			
+			Member member = (Member) ois.readObject();
+			
+			long afterTime=System.currentTimeMillis();
+			long diffTime=afterTime-beforeTime;
+			System.out.println(("beforeTime:"+beforeTime));
+			String id = member.getId();
+			String name = member.getName();
+			int kor = member.getKor();
+			int eng  = member.getEng();
+			int math = member.getMath();
+			 
+			/*
+			 * System.out.println("id : " + id + "\nname : " + name + "\nkor : " + kor+
+			 * "\neng : " + eng+ "\nmath : " + math);
+			 */
+			System.out.println(member.toString());
+			
+			//MemberDAO.getInstance().insert(member);
+			ois.close();
+			is.close();
+			client.close();
+			server.close();
+			
+			
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+}
